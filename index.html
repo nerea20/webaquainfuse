@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pHtvm+WBDEtg65cVIS95TxLsxps+eNYTTnKVEycIdpYv3CHJDQTUM0hj4Cm+YWUfalJdfdkXsF7GfLauUan9BQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Aquainfuse - Máquina Expendedora Virtual</title>
+    <style>
+
+    /* Estilos Generales */
+    body {
+        font-family: 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: #E6EEF5; /* Fondo azul claro */
+        color: #333;
+    }
+
+    /* Encabezado */
+    header {
+        background-color: #87CEEB; /* Azul más claro */
+        background-image: url('logo.png');
+        background-size: contain;
+        background-position: left;
+        background-repeat: no-repeat;
+        position: relative;
+        padding: 100px 20px;
+        text-align: center;
+    }
+
+    header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255,255,255,0.2); /* Fondo semitransparente para mejorar legibilidad */
+        z-index: 1;
+    }
+
+    header h1,
+    header p {
+        position: relative;
+        z-index: 2;
+    }
+
+    header h1 {
+        font-family: 'Lobster', cursive;
+        margin: 0;
+        font-size: 3rem;
+        color: #ffffff; /* Color del título */
+    }
+
+    header p {
+        font-family: 'Lato', sans-serif;
+        margin-top: 10px;
+        font-size: 1.2rem;
+        color: #C8A2C8; /* Lila */
+    }
+
+    /* Máquina Expendedora */
+    .vending-machine {
+        background-color: #F0F4F8; /* Azul muy claro */
+        border: 2px solid #007acc;
+        border-radius: 15px;
+        margin: 2rem auto;
+        padding: 2rem;
+        max-width: 1200px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Display de Productos */
+    .product-display {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .product-display img {
+        margin: 10px;
+        border-radius: 10px;
+        width: 280px;
+        height: 280px;
+        object-fit: cover;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+
+    /* Opciones de la Máquina Expendedora */
+    .vending-options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .vending-button {
+        background-color: #007acc;
+        color: #fff;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border-radius: 5px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .vending-button:hover {
+        background-color: #005c99;
+    }
+
+    /* Área de Contenido */
+    #content-display {
+        background-color: #F0F4F8; /* Azul muy claro */
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 2rem auto;
+        max-width: 1200px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        min-height: 300px;
+    }
+
+    /* Pie de Página */
+    footer {
+        background-color: #007acc;
+        color: #ffffff;
+        text-align: center;
+        padding: 1rem;
+        position: relative;
+        width: 100%;
+    }
+
+    /* Estilos de las Secciones */
+    #content-display h2 {
+        color: #007acc;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 2.5rem;
+    }
+
+    /* Estilos de Características y Sabores mejorados */
+    .card-section {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    .feature-card, .flavor-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+        width: calc(33.333% - 2rem); /* Tres tarjetas por fila */
+        box-sizing: border-box;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .feature-card:hover, .flavor-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    .feature-card i, .flavor-card i {
+        font-size: 2.5rem;
+        color: #87CEEB; /* Color coherente con el encabezado */
+        margin-bottom: 1rem;
+    }
+
+    .feature-card h3, .flavor-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #007acc;
+    }
+
+    .feature-card p, .flavor-card p {
+        font-size: 1rem;
+        color: #555555;
+    }
+
+    /* Estilos para la tabla de precios */
+    #prices table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: auto;
+        font-size: 1.1rem;
+    }
+
+    #prices th, #prices td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: center;
+    }
+
+    #prices th {
+        background-color: #007acc;
+        color: #fff;
+    }
+
+    /* Estilos para el Formulario de Pedidos */
+    #orderForm {
+        max-width: 600px;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #orderForm label {
+        display: block;
+        margin-top: 1rem;
+        color: #333;
+        font-weight: bold;
+    }
+
+    #orderForm input, 
+    #orderForm select {
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: 5px;
+        border: 1px solid #B0C4DE; /* Borde azul grisáceo */
+        font-size: 1rem;
+        margin-top: 0.5rem;
+        background-color: #ffffff;
+    }
+
+    #orderForm button {
+        background-color: #007acc;
+        color: #fff;
+        border: none;
+        padding: 1rem;
+        font-size: 1.1rem;
+        cursor: pointer;
+        margin-top: 1.5rem;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    #orderForm button:hover {
+        background-color: #005c99;
+    }
+
+    /* Responsividad */
+    @media (max-width: 768px) {
+        header h1 {
+            font-size: 2.5rem;
+        }
+
+        .product-display img {
+            width: 100%;
+            height: auto;
+        }
+
+        .vending-button {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        #orderForm button {
+            width: 100%;
+        }
+
+        /* Ajustes para tarjetas en pantallas medianas */
+        .feature-card, .flavor-card {
+            width: calc(50% - 2rem); /* Dos tarjetas por fila en pantallas medianas */
+        }
+
+        .card-section {
+            gap: 1.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        header h1 {
+            font-size: 2rem;
+        }
+
+        header p {
+            font-size: 1rem;
+        }
+
+        .vending-machine {
+            padding: 1rem;
+            margin: 1rem;
+        }
+
+        #content-display {
+            padding: 1rem;
+            margin: 1rem;
+        }
+
+        /* Ajustes para tarjetas en pantallas pequeñas */
+        .feature-card, .flavor-card {
+            width: 100%; /* Una tarjeta por fila en pantallas pequeñas */
+        }
+
+        .card-section {
+            gap: 1rem;
+        }
+    }
+
+    /* Estilos adicionales para la lista de autores */
+    .author-list {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: #ffffff;
+    }
+
+    .author-list ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .author-list li {
+        margin-bottom: 0.3rem;
+    }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Aquainfuse</h1>
+        <p>Siente la explosión de frescura en cada sorbo.</p>
+    </header>
+
+    <main>
+        <div class="vending-machine">
+            <div class="product-display">
+                <img src="termopng.jpg" alt="Termo Aquainfuse">
+                <img src="neverapng.jpg" alt="Nevera Aquainfuse">
+            </div>
+            <div class="vending-options">
+                <button class="vending-button" onclick="showContent('caracteristicas')">CARACTERÍSTICAS</button>
+                <button class="vending-button" onclick="showContent('sabores-frios')">SABORES FRÍOS</button>
+                <button class="vending-button" onclick="showContent('sabores-calientes')">SABORES CALIENTES</button>
+                <button class="vending-button" onclick="showContent('pedidos')">PEDIDOS</button>
+                <button class="vending-button" onclick="showContent('precios')">PRECIOS</button>
+            </div>
+        </div>
+
+        <div id="content-display">
+            <!-- El contenido se cargará aquí -->
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Aquainfuse+. Todos los derechos reservados.</p>
+        <div class="author-list">
+            <p>Autores del Código:</p>
+            <ul>
+                <li>Nerea Rivera Hidalgo</li>
+                <li>Antonio Sánchez</li>
+                <li>Dunia Fernández</li>
+				<li>Laura Serendipia</li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+        const sabores = {
+            frio: ["Limón o Lima", "Fresa", "Mora", "Sandía", "Melón", "Piña", "Melocotón", "Naranja", "Frambuesa", "Mango"],
+            caliente: ["Manzanilla", "Tila", "Café", "Menta Poleo", "Frutos Rojos", "Matcha", "Té Negro", "Té Verde", "Chocolate", "Jengibre y Limón"]
+        };
+
+        function showContent(page) {
+            const contentDisplay = document.getElementById('content-display');
+
+            if (page === 'caracteristicas') {
+                contentDisplay.innerHTML = `
+                    <section id="features" class="card-section">
+                        <h2></h2>
+                        <div class="feature-card">
+                            <i class="fas fa-plus-square"></i>
+                            <h3>Sin Azúcares Añadidos</h3>
+                            <p>Disfruta de una bebida saludable sin azúcares añadidos.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-seedling"></i>
+                            <h3>Ingredientes 100% Naturales</h3>
+                            <p>Utilizamos ingredientes naturales para una mejor calidad.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-clock"></i>
+                            <h3>Fácil y Rápido de Preparar</h3>
+                            <p>Prepara tu bebida favorita en cuestión de minutos.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-heartbeat"></i>
+                            <h3>Estilo de Vida Saludable</h3>
+                            <p>Promovemos hábitos saludables con nuestras bebidas.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-tint"></i>
+                            <h3>Variedad de Sabores Refrescantes</h3>
+                            <p>Elige entre una amplia gama de sabores deliciosos.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-star"></i>
+                            <h3>Perfecto para Cualquier Ocasión</h3>
+                            <p>Ideal en casa, en la oficina o al aire libre.</p>
+                        </div>
+                    </section>
+                `;
+            } else if (page === 'sabores-frios') {
+                contentDisplay.innerHTML = `
+                    <section id="cold-flavors" class="card-section">
+                        <h2></h2>
+                        <div class="flavor-card">
+                            <i class="fas fa-lemon"></i>
+                            <h3>Limón o Lima</h3>
+                            <p>Sabor ácido y refrescante a la vez.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-strawberry"></i>
+                            <h3>Fresa</h3>
+                            <p>Sabor agradable en cada sorbo.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-apple-alt"></i>
+                            <h3>Mora</h3>
+                            <p>Sabor delicado que anima al beberlo.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-watermelon"></i>
+                            <h3>Sandía</h3>
+                            <p>Recuerdo bonito del verano.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-seedling"></i>
+                            <h3>Melón</h3>
+                            <p>Frescura e infancia en cada sorbo.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-cocktail"></i>
+                            <h3>Piña</h3>
+                            <p>Alegría, tranquilidad y armonía.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-peach"></i>
+                            <h3>Melocotón</h3>
+                            <p>Frescor que te hace sentir alegre.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-orange"></i>
+                            <h3>Naranja</h3>
+                            <p>Acidez y frescura que dan paz mental.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-raspberry"></i>
+                            <h3>Frambuesa</h3>
+                            <p>Recuerdos de veranos en la piscina.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-mango"></i>
+                            <h3>Mango</h3>
+                            <p>Frescor simpático y elegante.</p>
+                        </div>
+                    </section>
+                `;
+            } else if (page === 'sabores-calientes') {
+                contentDisplay.innerHTML = `
+                    <section id="hot-flavors" class="card-section">
+                        <h2></h2>
+                        <div class="flavor-card">
+                            <i class="fas fa-mug-hot"></i>
+                            <h3>Manzanilla</h3>
+                            <p>Sabor calmante y relajante.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-spa"></i>
+                            <h3>Tila</h3>
+                            <p>Sabor agradable en cada sorbo.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-coffee"></i>
+                            <h3>Café</h3>
+                            <p>Sabores astringentes y picantes.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-leaf"></i>
+                            <h3>Menta Poleo</h3>
+                            <p>Fresco y relajante tras cada sorbo.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-heart"></i>
+                            <h3>Frutos Rojos</h3>
+                            <p>Sabor ligeramente ácido y amargo.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-seedling"></i>
+                            <h3>Matcha</h3>
+                            <p>Intenso, con notas dulces y amargas.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-leaf"></i>
+                            <h3>Té Negro</h3>
+                            <p>Estimula sin ponerte nervioso.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-leaf"></i>
+                            <h3>Té Verde</h3>
+                            <p>Sabor amargo si se elabora demasiado.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-chocolate-bar"></i>
+                            <h3>Chocolate</h3>
+                            <p>Cremoso en cada momento en la boca.</p>
+                        </div>
+                        <div class="flavor-card">
+                            <i class="fas fa-burn"></i>
+                            <h3>Jengibre y Limón</h3>
+                            <p>Picante con toque dulce inolvidable.</p>
+                        </div>
+                    </section>
+                `;
+            } else if (page === 'pedidos') {
+                contentDisplay.innerHTML = `
+                    <section id="orders">
+                        <h2>Realiza tu Pedido</h2>
+                        <form id="orderForm">
+                            <label for="tipoSabor">Tipo de Bebida:</label>
+                            <select id="tipoSabor" name="tipoSabor" required>
+                                <option value="" disabled selected>Selecciona el tipo de bebida</option>
+                                <option value="frio">Bebida Fría</option>
+                                <option value="caliente">Bebida Caliente</option>
+                            </select>
+
+                            <label for="flavor">Sabor:</label>
+                            <select id="flavor" name="flavor" required disabled>
+                                <option value="" disabled selected>Primero selecciona el tipo de bebida</option>
+                            </select>
+
+                            <label for="cantidad">Cantidad:</label>
+                            <input type="number" id="cantidad" name="cantidad" min="1" required>
+
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" id="nombre" name="nombre" required>
+
+                            <label for="email">Correo electrónico:</label>
+                            <input type="email" id="email" name="email" required>
+
+                            <label for="direccion">Dirección:</label>
+                            <input type="text" id="direccion" name="direccion" required>
+
+                            <label for="codigoPostal">Código Postal:</label>
+                            <input type="text" id="codigoPostal" name="codigoPostal" required>
+
+                            <label for="telefono">Teléfono Móvil:</label>
+                            <input type="tel" id="telefono" name="telefono" required>
+
+                            <button type="submit">Realizar Pedido</button>
+                        </form>
+                    </section>
+                `;
+
+                const tipoSaborSelect = document.getElementById('tipoSabor');
+                const flavorSelect = document.getElementById('flavor');
+
+                tipoSaborSelect.addEventListener('change', function() {
+                    flavorSelect.disabled = false;
+                    flavorSelect.innerHTML = '<option value="" disabled selected>Selecciona un sabor</option>';
+                    const tipoSeleccionado = this.value;
+                    if (tipoSeleccionado && sabores[tipoSeleccionado]) {
+                        sabores[tipoSeleccionado].forEach(sabor => {
+                            const option = document.createElement('option');
+                            option.value = sabor.toLowerCase().replace(/ /g, '_');
+                            option.textContent = sabor;
+                            flavorSelect.appendChild(option);
+                        });
+                    }
+                });
+
+                const orderForm = document.getElementById('orderForm');
+                orderForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // Aquí puedes agregar la lógica para procesar el pedido
+                    alert('¡Pedido realizado exitosamente!');
+                    orderForm.reset();
+                    flavorSelect.disabled = true;
+                    flavorSelect.innerHTML = '<option value="" disabled selected>Primero selecciona el tipo de bebida</option>';
+                });
+            } else if (page === 'precios') {
+                contentDisplay.innerHTML = `
+                    <section id="prices">
+                        <h2>Precios de Aquainfuse</h2>
+                        <table>
+                            <tr>
+                                <th>Tamaño</th>
+                                <th>Precio</th>
+                            </tr>
+                            <tr>
+                                <td>Medio litro</td>
+                                <td class="price">1,00 €</td>
+                            </tr>
+                            <tr>
+                                <td>Un litro</td>
+                                <td class="price">2,50 €</td>
+                            </tr>
+                            <tr>
+                                <td>Litro y medio</td>
+                                <td class="price">3,50 €</td>
+                            </tr>
+                            <tr>
+                                <td>Dos litros</td>
+                                <td class="price">5,00 €</td>
+                            </tr>
+                        </table>
+                    </section>
+                `;
+            }
+
+            contentDisplay.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const flavorSelect = document.getElementById('flavor');
+            if (flavorSelect) {
+                flavorSelect.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>
